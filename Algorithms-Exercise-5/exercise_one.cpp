@@ -1,6 +1,8 @@
 // C++ Program for Implementing Binary Tree
 #include <iostream>
 #include <queue>
+#include <cmath>
+#include <sstream>
 using namespace std;
 
 // Template class for the Node of a Binary Tree
@@ -23,6 +25,25 @@ public:
         else if (value > this->data && this->right != nullptr) return right->contains(value);
         else return false;
     }
+
+
+    void insert(Node<T>* newNode){
+        if (newNode->data <= this->data){
+            if (this->left == nullptr) this->left = newNode;
+            else this->left->insert(newNode);
+        }
+        else{
+            if (this->right == nullptr) this->right = newNode;
+            else this->right->insert(newNode);
+        }
+    }
+
+    //helper function that gets the max height from the desired node
+    int getHeight() {
+        int leftHeight = (left == nullptr) ? 0 : left->getHeight();
+        int rightHeight = (right == nullptr) ? 0 : right->getHeight();
+        return 1 + std::max(leftHeight, rightHeight);
+    }
 };
 
 // Template class for a Binary Tree
@@ -31,6 +52,7 @@ class BinaryTree {
 private:
     // Pointer to the root of the tree
     Node<T>* root;  
+
 
     // Recursive Function to delete a node from the tree
     Node<T>* deleteRecursive(Node<T>* current, T value) {
@@ -196,6 +218,96 @@ public:
         return false;
     }
 
+    
+    //insertion like a Binary Search tree
+    void BST_insert(T value){
+        Node<T>* newNode = new Node<T>(value);
+
+        //if BST is empty we setup our tree and return
+        if (root == nullptr) {
+            root = newNode;
+            return;
+        }
+        //if not we insert the value
+        else root->insert(newNode);
+    }
+
+
+    //now trying to make a pretty output function
+    void prettyTree() {
+        if (root == nullptr) return;
+
+        int height = root->getHeight();
+        int maxWidth = pow(2, height) * 2;
+
+        vector<Node<T>*> currentLevel;
+        currentLevel.push_back(root);
+
+        for (int depth = 0; depth < height; ++depth) {
+            vector<Node<T>*> nextLevel;
+
+            int spacesBefore = maxWidth / pow(2, depth + 1); // spacing before the first element
+            int spacesBetween = maxWidth / pow(2, depth);    // spacing between elements
+
+            // print leading spaces
+            printSpaces(spacesBefore);
+
+            // print node values
+            for (Node<T>* node : currentLevel) {
+                if (node) {
+                    cout << node->data;
+                    nextLevel.push_back(node->left);
+                    nextLevel.push_back(node->right);
+                } else {
+                    cout << " ";
+                    nextLevel.push_back(nullptr);
+                    nextLevel.push_back(nullptr);
+                }
+                printSpaces(spacesBetween - 1); // space between nodes
+            }
+
+            cout << endl;
+
+            // Print branches (/ and \)
+            if (depth < height - 1) {
+                printBranches(currentLevel, spacesBefore, spacesBetween);
+            }
+
+            currentLevel = nextLevel;
+        }
+    }
+
+    // Helper: prints spaces
+    void printSpaces(int count) {
+        for (int i = 0; i < count; ++i) {
+            cout << " ";
+        }
+    }
+
+    // Helper: prints connecting lines between nodes
+    void printBranches(vector<Node<T>*>& level, int spacesBefore, int spacesBetween) {
+        int items = level.size();
+        printSpaces(spacesBefore - 1);
+
+        for (int i = 0; i < items; ++i) {
+            if (level[i]) {
+                if (level[i]->left) cout << "/";
+                else cout << " ";
+
+                printSpaces(1);
+
+                if (level[i]->right) cout << "\\";
+                else cout << " ";
+            } else {
+                cout << "   ";
+            }
+
+            printSpaces(spacesBetween - 3); // spacing after branches
+        }
+
+        cout << endl;
+    }
+
 };
 
 int main() {
@@ -226,6 +338,10 @@ int main() {
 
 
     cout << "Does 3 exist in our Tree? " << (tree.contains(3) ? "Yes" : "No") << endl;
+
+
+    cout << "Pretty Tree graphics: " << endl;
+    tree.prettyTree();
 
     tree.deleteNode(3);
     cout << "Inorder traversal after removing 3: ";
