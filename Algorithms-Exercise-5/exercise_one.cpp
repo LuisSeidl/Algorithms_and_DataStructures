@@ -3,6 +3,8 @@
 #include <queue>
 #include <cmath>
 #include <sstream>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
 // Template class for the Node of a Binary Tree
@@ -275,6 +277,8 @@ public:
 
             currentLevel = nextLevel;
         }
+
+        cout << endl;
     }
 
     // Helper: prints spaces
@@ -308,18 +312,60 @@ public:
         cout << endl;
     }
 
+
+    void preOrderInput(){
+        if(this->root != nullptr) {
+            cout << "Tree already exists, can't enter new Values using this Input";
+        } else{
+            cout << endl << "Input the desired Tree in Preorder Structure" << endl;
+            string input;
+            cin >> input;
+
+            string cleanedInput;
+
+            for(char c : input){
+                if(isdigit(c) || c == ',') cleanedInput += c;
+            }
+
+            stringstream ss(cleanedInput);
+            string segment;
+            vector<string> nodes;
+
+            while(getline(ss, segment, ',')){
+                nodes.push_back(segment);
+            }
+
+            nodes.erase(
+                remove_if(nodes.begin(), nodes.end(),
+                        [](const string& s) { return s.empty(); }),
+                nodes.end());
+
+            
+            
+            if (this->root != nullptr) {
+                cout << "Tree already exists, can't enter new values from preOrderInput";
+            }
+
+            for(const string& s : nodes){
+                this->BST_insert(stoi(s));
+            }
+        }
+    }   
+
 };
 
 int main() {
     BinaryTree<int> tree;
     
     // Insert the nodes into the tree
-    tree.insertNode(1);
-    tree.insertNode(2);
-    tree.insertNode(3);
-    tree.insertNode(4);
-    tree.insertNode(5);
-    tree.insertNode(6);
+    /*
+    int arr [6] = {6, 3, 8, 1, 7, 9};
+
+    for(int a : arr){
+        tree.BST_insert(a);
+    }
+
+    
 
     cout << "Inorder traversal: ";
     tree.inorder();
@@ -327,7 +373,7 @@ int main() {
     cout << "Preorder traversal: ";
     tree.preorder();
 
-    cout << "Postorder traversal: ";
+    cout << "Postorder traversal: "; 
     tree.postorder();
 
     cout << "Level order traversal: ";
@@ -336,18 +382,12 @@ int main() {
     cout << "Searching for 7: " << (tree.search(7) ? "Found" : "Not Found") << endl;
     cout << "Searching for 6: " << (tree.search(6) ? "Found" : "Not Found") << endl;
 
-
     cout << "Does 3 exist in our Tree? " << (tree.contains(3) ? "Yes" : "No") << endl;
+    */
 
+    tree.preOrderInput();
 
-    cout << "Pretty Tree graphics: " << endl;
+    cout << "Pretty Tree graphics: " << endl << endl;
     tree.prettyTree();
-
-    tree.deleteNode(3);
-    cout << "Inorder traversal after removing 3: ";
-    tree.inorder();
-
-    cout << "Does 3 exist in our Tree? " << (tree.contains(3) ? "Yes" : "No") << endl;
-
     return 0;
 }
