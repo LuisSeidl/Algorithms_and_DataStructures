@@ -352,6 +352,68 @@ public:
         }
     }   
 
+    Node<T>* sortedArrayToBSTRecur(vector<T>& arr, int start, int end) {
+        if(start > end) return nullptr;
+        
+        // Find the middle element
+        int mid = start + (end - start) / 2;
+        
+        // Create root node
+        Node<int>* root = new Node(arr[mid]);
+        
+        // Create left subtree
+        root->left = sortedArrayToBSTRecur(arr, start, 
+                                        mid - 1);
+                                        
+        // Create right subtree
+        root->right = sortedArrayToBSTRecur(arr, mid + 1,
+                                        end);
+        return root;
+    }
+
+    Node<T>* sortedArraytoBST(vector<T>& arr){
+        int n = arr.size();
+        return sortedArrayToBSTRecur(arr, 0, n-1);
+    }
+    
+
+    void inOrderInput(){
+        if(this->root != nullptr) {
+            cout << "Tree already exists, can't enter new Values using this Input";
+        } else{
+            cout << endl << "Input the desired Tree in InOrder Structure" << endl;
+            string input;
+            cin >> input;
+
+            string cleanedInput;
+
+            for(char c : input){
+                if(isdigit(c) || c == ',') cleanedInput += c;
+            }
+
+            stringstream ss(cleanedInput);
+            string segment;
+            vector<string> nodes;
+
+            while(getline(ss, segment, ',')){
+                nodes.push_back(segment);
+            }
+
+            nodes.erase(
+                remove_if(nodes.begin(), nodes.end(),
+                        [](const string& s) { return s.empty(); }),
+                nodes.end());
+
+
+            vector<int> arr;
+
+            for(const string& s : nodes){
+                arr.push_back(stoi(s));
+            }
+
+            root = sortedArraytoBST(arr);
+        }
+    }
 };
 
 int main() {
@@ -385,7 +447,7 @@ int main() {
     cout << "Does 3 exist in our Tree? " << (tree.contains(3) ? "Yes" : "No") << endl;
     */
 
-    tree.preOrderInput();
+    tree.inOrderInput();
 
     cout << "Pretty Tree graphics: " << endl << endl;
     tree.prettyTree();
