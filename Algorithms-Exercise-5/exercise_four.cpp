@@ -306,29 +306,32 @@ public:
     int main(){
         Node *root = nullptr;
 
-        vector<int> values = {5, 6, 9, 12, 13, 3, 8, 10, 11, 16,15, 14, 7, 4, 2, 1};
+        vector<int> nodes = {5, 6, 9, 12, 13, 3, 8, 10, 11, 16,15, 14, 7, 4, 2, 1};
 
-        for(int i : values){
-            root = insert(root, i);
+        for(int node : nodes){
+            root = insert(root, node);
         }
 
         cout << "Preorder traversal of the "
-                "constructed AVL tree is \n";
+                "constructed AVL tree is: ";
         preOrder(root);
+
+        int treeHeight = getHeight(root) - 1;
+        int treeSize = nodes.size();
+
+        cout << "\n Height of the Tree : " << treeHeight  <<" | Elements of the Tree: " << treeSize << endl ;
 
         cout << "\n Pretty Tree graphics: \n";
         prettyTree(root);
 
-        vector<int> valuesToDelete = {12, 8, 5, 4, 3, 6, 15, 14};
+        //vector<int> valuesToDelete = {12, 8, 5, 4, 3, 6, 15, 14};
+        //for(int i : valuesToDelete){
+        //root = deleteNode(root, i);
+        //}
+        //cout << "\nPreorder traversal after deletion \n";
+        //preOrder(root);
+        //cout << "\n Pretty Tree graphics: \n";
+        //prettyTree(root);
 
-        for(int i : valuesToDelete){
-        root = deleteNode(root, i);
-        }
-
-        cout << "\nPreorder traversal after deletion \n";
-        preOrder(root);
-
-        cout << "\n Pretty Tree graphics: \n";
-        prettyTree(root);
         return 0;
     }
