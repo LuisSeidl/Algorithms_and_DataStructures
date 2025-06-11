@@ -21,15 +21,15 @@ public:
     unordered_map<int, int> countCache;
 
     int countMinAVL(int n){
-        if( n==0 | n==1) return 1;
-        if( countCache.count(n)) return countCache[n];
-        countCache[n] = 2* countMinAVL(n-1) * countMinAVL(n-2);
-        return countCache[n];
+        if(n==0) return 1;
+        else if (n==1) return 2;
+        //if( countCache.count(n)) return countCache[n];
+        return 2* countMinAVL(n-1) * countMinAVL(n-2);
     }
 
     vector<Node*> generateMinAVL(int n){
         if (n==0) return {nullptr};
-        if(n==1 ) return {new Node(nullptr, 0, nullptr)};
+        if (n==1) return {new Node(nullptr, 0, nullptr)};
 
         vector<Node*> trees;
 
@@ -51,7 +51,7 @@ public:
 
 
     int main(){
-        int n = 4;
+        int n = 5;
 
         auto trees = generateMinAVL(n);
         int count = countMinAVL(n);
